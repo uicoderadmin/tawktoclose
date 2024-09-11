@@ -10,6 +10,8 @@ app.post('/webhook', async (req, res) => {
   try {
     // Extract data from the webhook (assuming name, email, and message)
     const leadfields ={}
+
+    console.log('API Key:', process.env.CLOSE_CRM_API_KEY);
     const message = req.body?.message.text.split("\r\n").forEach((text) =>{
         const splitedData=  text.split(" : ")
         leadfields[splitedData[0]]=splitedData[1]
@@ -38,7 +40,7 @@ app.post('/webhook', async (req, res) => {
     // Send the data to Close CRM API
     const response = await axios.post('https://api.close.com/api/v1/lead/', leadData, {
       headers: {
-        'Authorization': `Basic ${process.env.CLOSE_CRM_API_KEY}`, // Use environment variable for API key
+        'Authorization': `Bearer ${process.env.CLOSE_CRM_API_KEY}`, // Use environment variable for API key
         'Content-Type': 'application/json',
       },
     });
