@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json()); // To parse incoming JSON data
 
 // Webhook handler for Tawk.to
-app.post('/webhook', async (req, res) => {
+app.get('/webhook', async (req, res) => {
   try {
     // Extract data from the webhook (assuming name, email, and message)
     // const { name, email, message } = req.body;
