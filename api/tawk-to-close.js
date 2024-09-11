@@ -38,7 +38,7 @@ app.post('/webhook', async (req, res) => {
     // Send the data to Close CRM API
     const response = await axios.post('https://api.close.com/api/v1/lead/', leadData, {
       headers: {
-        'Authorization': `Bearer ${process.env.CLOSE_CRM_API_KEY}`, // Use environment variable for API key
+        'Authorization': `Basic ${process.env.CLOSE_CRM_API_KEY}`, // Use environment variable for API key
         'Content-Type': 'application/json',
       },
     });
