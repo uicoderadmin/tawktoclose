@@ -11,6 +11,7 @@ app.get('/webhook', async (req, res) => {
     // Extract data from the webhook (assuming name, email, and message)
     // const { name, email, message } = req.body;
 
+    console.log('Incoming Webhook Data:', req.body);
     // // Prepare the data to send to Close CRM
     // const leadData = {
     //   name: name,
