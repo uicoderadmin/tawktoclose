@@ -1,6 +1,8 @@
 const express = require('express');
 const axios = require('axios');
+const Closeio = require('close.io');
 
+const closeio = new Closeio(process.env.CLOSE_CRM_API_KEY);
 const app = express();
 
 app.use(express.json()); // To parse incoming JSON data
@@ -37,16 +39,10 @@ app.post('/webhook', async (req, res) => {
       },
     };
 
-    // Send the data to Close CRM API
-    const response = await axios.post('https://api.close.com/api/v1/lead/', leadData, {
-      headers: {
-        'Authorization': `Bearer ${process.env.CLOSE_CRM_API_KEY}`, // Use environment variable for API key
-        'Content-Type': 'application/json',
-      },
-    });
-
-    console.log('Lead created in Close CRM:', response.data);
-    res.status(200).json({ message: 'Lead created successfully', data: response.data });
+   closeio.lead.create(leadData)
+    .then(function(lead){
+      return closeio.lead.read(lead.id);
+    })
   } catch (error) {
     console.error('Error creating lead:', error.response?.data || error.message);
     res.status(500).json({ error: 'Failed to create lead' });
