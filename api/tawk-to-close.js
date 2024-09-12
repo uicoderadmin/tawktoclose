@@ -12,6 +12,8 @@ app.post('/webhook', async (req, res) => {
   try {
     // Extract data from the webhook (assuming name, email, and message)
     const leadfields = {};
+    console.log(req.body);
+    
     // Parse the message text into key-value pairs
     req.body?.message.text.split("\r\n").forEach((text) => {
       const splitedData = text.split(" : ");
