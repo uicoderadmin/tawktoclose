@@ -25,8 +25,13 @@ app.post('/webhook', async (req, res) => {
       contacts: [
         {
           name: leadfields.Name,
-          emails: [{ email: leadfields.Email }],
-          phones: [
+          "emails": [
+                {
+                    "type": "office",
+                    "email": leadfields.Email
+                }
+            ],
+            "phones": [
                 {
                     "type": "office",
                     "phone": leadfields.Phone
@@ -38,10 +43,14 @@ app.post('/webhook', async (req, res) => {
        'Referral Source': 'Tawk Chat'
       },
     };
-
+    console.log(leadData);
+    
    closeio.lead.create(leadData)
     .then(function(lead){
+      console.log('Lead created:', lead);
       return closeio.lead.read(lead.id);
+    }).catch(function(error){
+      console.error('Error creating lead:', error.response?.data || error.message);
     })
   } catch (error) {
     console.error('Error creating lead:', error.response?.data || error.message);
