@@ -35,7 +35,7 @@ app.post('/webhook', async (req, res) => {
         },
       ],
       custom: {
-        Source: 'Tawk.to Pre-Chat Form',
+       'Referral Source': 'Tawk Chat'
       },
     };
 
