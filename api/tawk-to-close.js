@@ -47,7 +47,7 @@ app.post('/webhook', async (req, res) => {
     console.log('Lead created successfully:', lead);
 
     // Respond with the created lead data
-    res.status(200).json({ message: 'Lead created successfully', data: createdLead });
+    res.status(200).json({ message: 'Lead created successfully', data: lead });
   } catch (error) {
     console.error('Error creating lead:', error.response?.data || error.message);
     res.status(500).json({ error: 'Failed to create lead' });
