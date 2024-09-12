@@ -11,12 +11,11 @@ app.use(express.json()); // To parse incoming JSON data
 app.post('/webhook', async (req, res) => {
   try {
     // Extract data from the webhook (assuming name, email, and message)
-    const leadfields ={}
-
-    console.log('API Key:', process.env.CLOSE_CRM_API_KEY);
-    const message = req.body?.message.text.split("\r\n").forEach((text) =>{
-        const splitedData=  text.split(" : ")
-        leadfields[splitedData[0]]=splitedData[1]
+    const leadfields = {};
+    // Parse the message text into key-value pairs
+    req.body?.message.text.split("\r\n").forEach((text) => {
+      const splitedData = text.split(" : ");
+      leadfields[splitedData[0]] = splitedData[1];
     });
 
     // Prepare the data to send to Close CRM
@@ -25,34 +24,37 @@ app.post('/webhook', async (req, res) => {
       contacts: [
         {
           name: leadfields.Name,
-          "emails": [
-                {
-                    "type": "office",
-                    "email": leadfields.Email
-                }
-            ],
-            "phones": [
-                {
-                    "type": "office",
-                    "phone": leadfields.Phone
-                }
-            ]
+          emails: [
+            {
+              type: "office",
+              email: leadfields.Email
+            }
+          ],
+          phones: [
+            {
+              type: "office",
+              phone: leadfields.Phone
+            }
+          ]
         },
       ],
       custom: {
-       'Referral Source': 'Tawk Chat'
+        'Referral Source': 'Tawk Chat'
       },
     };
-    console.log(leadData);
-    
-   closeio.lead.create(leadData)
-    .then(function(lead){
-      console.log('Lead created:', lead);
-      return closeio.lead.read(lead.id);
-    }).then(function(search_results){}, function(error){
-  console.log("There has been an error.");
-      console.error('Error creating lead:', error.response?.data || error.message);
-});
+
+    console.log('Lead Data:', leadData);
+
+    // Create a lead in Close CRM
+    const lead = await closeio.lead.create(leadData);
+    console.log('Lead created successfully:', lead);
+
+    // Optionally, you can read the lead again if necessary
+    const createdLead = await closeio.lead.read(lead.id);
+    console.log('Created Lead Data:', createdLead);
+
+    // Respond with the created lead data
+    res.status(200).json({ message: 'Lead created successfully', data: createdLead });
   } catch (error) {
     console.error('Error creating lead:', error.response?.data || error.message);
     res.status(500).json({ error: 'Failed to create lead' });
