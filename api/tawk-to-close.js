@@ -42,16 +42,9 @@ app.post('/webhook', async (req, res) => {
         'Referral Source': 'Tawk Chat'
       },
     };
-
-    console.log('Lead Data:', leadData);
-
     // Create a lead in Close CRM
     const lead = await closeio.lead.create(leadData);
     console.log('Lead created successfully:', lead);
-
-    // Optionally, you can read the lead again if necessary
-    const createdLead = await closeio.lead.read(lead.id);
-    console.log('Created Lead Data:', createdLead);
 
     // Respond with the created lead data
     res.status(200).json({ message: 'Lead created successfully', data: createdLead });
