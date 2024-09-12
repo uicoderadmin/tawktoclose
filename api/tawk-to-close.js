@@ -49,9 +49,10 @@ app.post('/webhook', async (req, res) => {
     .then(function(lead){
       console.log('Lead created:', lead);
       return closeio.lead.read(lead.id);
-    }).catch(function(error){
+    }).then(function(search_results){}, function(error){
+  console.log("There has been an error.");
       console.error('Error creating lead:', error.response?.data || error.message);
-    })
+});
   } catch (error) {
     console.error('Error creating lead:', error.response?.data || error.message);
     res.status(500).json({ error: 'Failed to create lead' });
